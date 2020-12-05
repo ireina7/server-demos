@@ -1,6 +1,7 @@
 CC = gcc
 CFLAGS = -w -lpthread
 LDIR = out
+COMMONS = common.c utils.c
 
 outdir:
 	$(shell mkdir -p $(LDIR))
@@ -8,51 +9,51 @@ outdir:
 
 client: \
 	outdir \
-	common.c \
+	$(COMMONS) \
 	test_client.c
-	$(CC) $(CFLAGS) test_client.c common.c -o $(LDIR)/test_client.o
+	$(CC) $(CFLAGS) test_client.c $(COMMONS) -o $(LDIR)/test_client.o
 
 iterate: \
 	outdir \
-	common.c \
+	$(COMMONS) \
 	iterate_server.c
-	$(CC) $(CFLAGS) iterate_server.c common.c -o $(LDIR)/iterate_server.o
+	$(CC) $(CFLAGS) iterate_server.c $(COMMONS) -o $(LDIR)/iterate_server.o
 
 multiprocess: \
 	outdir \
-	common.c \
+	$(COMMONS) \
 	multiprocess_server.c
-	$(CC) $(CFLAGS) multiprocess_server.c common.c -o $(LDIR)/multiprocess_server.o
+	$(CC) $(CFLAGS) multiprocess_server.c $(COMMONS) -o $(LDIR)/multiprocess_server.o
 
 multithread: \
 	outdir \
-	common.c \
+	$(COMMONS) \
 	multithread_server.c
-	$(CC) $(CFLAGS) multithread_server.c common.c -o $(LDIR)/multithread_server.o
+	$(CC) $(CFLAGS) multithread_server.c $(COMMONS) -o $(LDIR)/multithread_server.o
 
 IOmultiplexing: \
 	outdir \
-	common.c \
+	$(COMMONS) \
 	IOmultiplexing_server.c
-	$(CC) $(CFLAGS) IOmultiplexing_server.c common.c -o $(LDIR)/IOmultiplexing_server.o
+	$(CC) $(CFLAGS) IOmultiplexing_server.c $(COMMONS) -o $(LDIR)/IOmultiplexing_server.o
 
 threadpool: \
 	outdir \
-	common.c \
+	$(COMMONS) \
 	threadpool_server.c
-	$(CC) $(CFLAGS) threadpool_server.c common.c -o $(LDIR)/threadpool_server.o
+	$(CC) $(CFLAGS) threadpool_server.c $(COMMONS) -o $(LDIR)/threadpool_server.o
 
 threadpoolmutex: \
 	outdir \
-	common.c \
+	$(COMMONS) \
 	threadpoolmutex_server.c
-	$(CC) $(CFLAGS) threadpoolmutex_server.c common.c -o $(LDIR)/threadpoolmutex_server.o
+	$(CC) $(CFLAGS) threadpoolmutex_server.c $(COMMONS) -o $(LDIR)/threadpoolmutex_server.o
 
 septhreadpool: \
 	outdir \
-	common.c \
+	$(COMMONS) \
 	septhreadpool_server.c
-	$(CC) $(CFLAGS) septhreadpool_server.c common.c -o $(LDIR)/septhreadpool_server.o
+	$(CC) $(CFLAGS) septhreadpool_server.c $(COMMONS) -o $(LDIR)/septhreadpool_server.o
 
 all: \
 	client \
