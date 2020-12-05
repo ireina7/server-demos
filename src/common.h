@@ -141,7 +141,8 @@ void Pthread_cond_wait(pthread_cond_t *cptr,pthread_mutex_t *mptr);
 void Pthread_cond_signal(pthread_cond_t *cptr);
 
 /* POSIX semaphore wrappers */
-void Sem_init(sem_t *sem, int pshared, unsigned int value);
+sem_t *Sem_init(char *name, int pshared, unsigned int value);
+//sem_t *Sem_init(int pshared, unsigned int value);
 void P(sem_t *sem);
 void V(sem_t *sem);
 

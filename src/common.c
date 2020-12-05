@@ -525,13 +525,22 @@ void Pthread_cond_signal(pthread_cond_t *cptr) {
  * Wrappers for Posix semaphores
  *******************************/
 
-void Sem_init(sem_t *sem, int pshared, unsigned int value) 
+sem_t *Sem_init(char *name, int pshared, unsigned int value) 
 {
-    if (sem_init(sem, pshared, value) < 0)
-	unix_error("Sem_init error");
+  //if (sem_init(sem, pshared, value) < 0)
+  //	unix_error("Sem_init error");
+
+  sem_t *s = (sem_t*) malloc(sizeof(sem_t));
+  s = sem_open(name, O_CREAT, S_IRWXU, value);
+  if (s == SEM_FAILED) {
+    sem_unlink(name);
+    unix_error("Sem_init error");
+  }
+  return s;
 }
 
-void P(sem_t *sem) 
+
+void P(sem_t *sem)
 {
     if (sem_wait(sem) < 0)
 	unix_error("P error");

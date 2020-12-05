@@ -50,14 +50,16 @@ void sigchld_handler(int sig){
     return;
 }
 
-void sbuf_init(sbuf_t *sp,int n)
+
+void sbuf_init(sbuf_t *sp, int n)
 {
-    sp->buf = Calloc(n,sizeof(int));//初始化
+    sp->buf = Calloc(n,sizeof(int));  //初始化
     sp->n = n;
     sp->front = sp->rear = 0;
-    Sem_init(&sp->mutex,0,1);
-    Sem_init(&sp->slots,0,n);
-    Sem_init(&sp->items,0,0);
+
+    sp->mutex = Sem_init("s1", 0, 1);
+    sp->slots = Sem_init("s2", 0, n);
+    sp->items = Sem_init("s3", 0, 0);
 }
 
 /* 清空*/
@@ -69,11 +71,11 @@ void sbuf_deinit(sbuf_t *sp)
 /* 插入到末尾*/
 void sbuf_insert(sbuf_t *sp,int item)
 {
-    P(&sp->slots);
-    P(&sp->mutex);
+    P(sp->slots);
+    P(sp->mutex);
     sp->buf[(++sp->rear)%(sp->n)] = item;
-    V(&sp->mutex);
-    V(&sp->items);
+    V(sp->mutex);
+    V(sp->items);
 }
 
 
@@ -81,11 +83,11 @@ void sbuf_insert(sbuf_t *sp,int item)
 int sbuf_remove(sbuf_t *sp)
 {
     int item;
-    P(&sp->items);                          /* 等待 */
-    P(&sp->mutex);                          /* 锁定 */
+    P(sp->items);                          /* 等待 */
+    P(sp->mutex);                          /* 锁定 */
     item = sp->buf[(++sp->front)%(sp->n)];  /* 移除 */
-    V(&sp->mutex);                          /* 解锁 */
-    V(&sp->slots);
+    V(sp->mutex);                          /* 解锁 */
+    V(sp->slots);
     return item;
 }
 
@@ -137,6 +139,7 @@ void handle(int fd)
 void *run(void *vargp)
 {
     Pthread_detach(pthread_self());
+    
     while(1)
     {
         int connfd = sbuf_remove(&sbuf);
@@ -151,7 +154,7 @@ int main(int argc, char **argv)
     struct sockaddr_in clientaddr;
     clientlen = sizeof(clientaddr);
     pthread_t tid;
-    int NTHREADS,SBUFSIZE;
+    int NTHREADS, SBUFSIZE;
 
     if (argc != 4) {
         fprintf(stderr, "usage: %s <port> <num/thread> <fdbufsize>\n", argv[0]);
@@ -168,6 +171,7 @@ int main(int argc, char **argv)
     listenfd = Open_listenfd(port);
 
     int i;
+
     for(i=0; i<NTHREADS; i++)/*create worker threads*/
     Pthread_create(&tid, NULL, run, NULL);
 
