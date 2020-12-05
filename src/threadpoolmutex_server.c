@@ -183,7 +183,7 @@ int sbuf_remove(sbuf_t *sp)
 }
 
 
-void doit(int fd)
+void handle(int fd)
 {
     int is_static;
     struct stat sbuf;
@@ -226,13 +226,13 @@ void doit(int fd)
 
 
 /* $end tinymain */
-void *thread(void *vargp)
+void *run(void *vargp)
 {
     Pthread_detach(pthread_self());
     while(1)
     {
         int connfd = sbuf_remove(&sbuf);
-        doit(connfd);
+        handle(connfd);
         Close(connfd);
     }
 }
@@ -260,7 +260,7 @@ int main(int argc, char **argv) {
 
     int i;
     for(i=0; i<NTHREADS; i++)/*create worker threads*/
-    Pthread_create(&tid, NULL, thread, NULL);
+    Pthread_create(&tid, NULL, run, NULL);
 
     while (1) {
     //connfd = Malloc(sizeof(int));//avoid race condition

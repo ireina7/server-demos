@@ -166,7 +166,7 @@ void sigchld_handler(int sig){
 
 
 
-void doit(int fd)
+void handle(int fd)
 {
     int is_static;
     struct stat sbuf;
@@ -219,7 +219,7 @@ void check_clients(pool *p)
         rio = p->clientrio[i];
 	if((connfd > 0) && (FD_ISSET(connfd,&p->ready_set))){
 	    p->nready--;
-	    doit(connfd);
+	    handle(connfd);
             if((n = Rio_readlineb(&rio, buf, MAXLINE)) != 0)
             {
 		byte_cnt += n;

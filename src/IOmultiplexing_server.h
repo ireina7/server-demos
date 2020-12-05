@@ -1,3 +1,6 @@
+#ifndef __IO_SERVER_H
+#define __IO_SERVER_H
+
 #include "common.h"
 
 
@@ -16,7 +19,7 @@ typedef struct
 int byte_cnt = 0;
 
 
-void doit(int fd);
+void handle(int fd);
 void read_requesthdrs(rio_t *rp);  //读并忽略请求报头
 int parse_uri(char *uri, char *filename, char *cgiargs);   //解析uri，得文件名存入filename中，参数存入cgiargs中.
 void serve_static(int fd, char *filename, int filesize);   //提供静态服务。
@@ -28,3 +31,6 @@ void sigchld_handler(int sig);
 void init_pool(int listenfd,pool *p);
 void add_client(int connfd,pool *p);
 void check_clients(pool *p);
+
+
+#endif

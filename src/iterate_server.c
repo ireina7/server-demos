@@ -123,7 +123,7 @@ int parse_uri(char *uri, char *filename,char *cgiargs)
 }
 
 
-void doit(int fd)
+void handle(int fd)
 {
     int is_static;
     struct stat sbuffer;
@@ -184,7 +184,7 @@ int main(int argc, char const *argv[])
         connfd = Accept(listenfd,(SA *)&clientaddr, &clientlen);
         getnameinfo((SA*)&clientaddr, clientlen, hostname, MAXLINE, port, MAXLINE, 0);
         printf("Accept connection from (%s , %s)\n", hostname, port);
-        doit(connfd);
+        handle(connfd);
         Close(connfd);
     }
 }

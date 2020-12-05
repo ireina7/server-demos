@@ -126,7 +126,7 @@ void sigchld_handler(int sig){
 }
 
 
-void doit(int fd)
+void handle(int fd)
 {
     int is_static;
     struct stat sbuf;
@@ -190,7 +190,7 @@ int main(int argc, char const *argv[])
         if(Fork() == 0){
             Close(listenfd);
             printf("Accept connection from (%s , %s)\n", hostname, port);
-            doit(connfd);
+            handle(connfd);
             exit(0);
         }
         Close(connfd);

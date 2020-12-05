@@ -134,7 +134,7 @@ void sigchld_handler(int sig){
 
 
 
-void doit(int fd)
+void handle(int fd)
 {
     int is_static;
     struct stat sbuf;
@@ -176,7 +176,7 @@ void doit(int fd)
 }
 
 /* $end tinymain */
-void *thread(void *vargp)
+void *run(void *vargp)
 {
     Pthread_detach(pthread_self());
     int connfd;
@@ -188,7 +188,7 @@ void *thread(void *vargp)
         Pthread_mutex_lock(&thead_lock);
         connfd = Accept(listenfd, (SA *)&clientaddr,&clientlen);
         Pthread_mutex_unlock(&thead_lock);
-        doit(connfd);
+        handle(connfd);
         Close(connfd);
     }
 }
@@ -215,7 +215,7 @@ int main(int argc, char **argv) {
 
     int i;
     for(i=0; i<NTHREADS; i++)/*create worker threads*/
-    Pthread_create(&tid, NULL, thread, NULL);
+    Pthread_create(&tid, NULL, run, NULL);
 
     while (1) {
     //connfd = Malloc(sizeof(int));//avoid race condition

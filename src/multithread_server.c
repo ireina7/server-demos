@@ -126,7 +126,7 @@ void sigchld_handler(int sig){
 }
 
 
-void doit(int fd)
+void handle(int fd)
 {
     int is_static;
     struct stat sbuf;
@@ -168,12 +168,12 @@ void doit(int fd)
 }
 
 /* $end tinymain */
-void *thread(void *vargp)
+void *run(void *vargp)
 {
     int connfd = *((int *)vargp);
     Pthread_detach(pthread_self());
     Free(vargp);
-    doit(connfd);
+    handle(connfd);
     Close(connfd);
     return NULL;
 }
@@ -200,6 +200,6 @@ int main(int argc, char **argv)
         clientlen = sizeof(struct sockaddr_storage);
         connfd = Malloc(sizeof(int));//avoid race condition
         *connfd = Accept(listenfd, (SA *)&clientaddr, &clientlen);
-        Pthread_create(&tid,NULL,&thread,connfd);
+        Pthread_create(&tid, NULL, run, connfd);
     }
 }
