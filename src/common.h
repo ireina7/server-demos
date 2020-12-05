@@ -1,6 +1,6 @@
 /* $begin common.h */
-#ifndef __CSAPP_H__
-#define __CSAPP_H__
+#ifndef __I_LOVE_SCALA_H
+#define __I_LOVE_SCALA_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -171,5 +171,5 @@ int Pipe(int pipefd[2]);
 
 
 
-#endif /* __CSAPP_H__ */
+#endif /* __I_LOVE_SCALA_H */
 /* $end common.h */

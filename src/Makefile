@@ -55,6 +55,9 @@ septhreadpool: \
 	septhreadpool_server.c
 	$(CC) $(CFLAGS) septhreadpool_server.c $(COMMONS) -o $(LDIR)/septhreadpool_server.o
 
+index.html: outdir
+	cp index.html out/
+
 all: \
 	client \
 	iterate \
@@ -63,7 +66,8 @@ all: \
 	IOmultiplexing \
 	threadpool \
 	threadpoolmutex \
-	septhreadpool
+	septhreadpool \
+	index.html
 
 clean:
 	rm -rf $(LDIR)
