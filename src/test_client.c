@@ -62,8 +62,8 @@ int main(int argc, char** argv) {
   while (Read(pipe[0], &temp_time, sizeof(temp_time)) > 0) {
     totaltime += temp_time;
   }
-  printf("the total_time is %lf\n", totaltime);
-  printf("the avg_time is %lf\n",
+  printf("Total used time: %lf\n", totaltime);
+  printf("Average used time: %lf\n",
          totaltime / ((double)nloops * (double)nchildren));
 
   if (errno != ECHILD) app_error("wait error!!");

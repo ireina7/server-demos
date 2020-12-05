@@ -11,10 +11,10 @@ void serve_static(int fd, char *filename, int filesize)
 
     get_filetype(filename,filetype);
     sprintf(buf,"HTTP/1.0 200 OK\r\n");
-    sprintf(buf,"%sServer:Tiny Web Server\r\n", buf);
-    sprintf(buf,"%sConnection:close\r\n", buf);
-    sprintf(buf,"%sContent-length:%d\r\n", buf, filesize);
-    sprintf(buf,"%sContent-type:%s\r\n\r\n", buf, filetype);
+    sprintf(buf,"%sServer: Web Server\r\n", buf);
+    sprintf(buf,"%sConnection: close\r\n", buf);
+    sprintf(buf,"%sContent-length: %d\r\n", buf, filesize);
+    sprintf(buf,"%sContent-type: %s\r\n\r\n", buf, filetype);
     Rio_writen(fd, buf, strlen(buf));
     printf("Response headers:\n");
     printf("%s", buf);
@@ -65,27 +65,27 @@ void handle(int fd)
     printf("%s", buf);
     sscanf(buf, "%s %s %s", method, uri, version);
     if(strcasecmp(method,"GET")) {
-        clienterror(fd, method, "501", "Not Implemented", "The WebServer does not implement this method");
+        clienterror(fd, method, "501", "Not Implemented", "The Web Server does not implement this method");
         return;
     }
     read_requesthdrs(&rio);
 
     is_static = parse_uri(uri, filename, cgiargs);
     if(stat(filename, &sbuf) < 0) {
-        clienterror(fd, filename, "404", "Not found", "The WebServer coundn't find this file");
+        clienterror(fd, filename, "404", "Not found", "The Web Server coundn't find this file");
         return;
     }
 
     if(is_static) {
         if(!(S_ISREG(sbuf.st_mode)) || !(S_IRUSR & sbuf.st_mode)) {
-            clienterror(fd,filename, "403", "Forbidden","The WebServer coundn't read the file");
+            clienterror(fd,filename, "403", "Forbidden","The Web Server coundn't read the file");
             return;
         }
         serve_static(fd, filename, sbuf.st_size);
     }
     else {
         if(!(S_ISREG(sbuf.st_mode)) || !(S_IXUSR & sbuf.st_mode)) {
-            clienterror(fd, filename, "403", "Forbidden","The WebServer coundn't run the CGI program");
+            clienterror(fd, filename, "403", "Forbidden","The Web Server coundn't run the CGI program");
             return;
         }
         serve_dynamic(fd, filename, cgiargs);

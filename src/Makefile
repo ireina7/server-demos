@@ -55,8 +55,14 @@ septhreadpool: \
 	septhreadpool_server.c
 	$(CC) $(CFLAGS) septhreadpool_server.c $(COMMONS) -o $(LDIR)/septhreadpool_server.o
 
-index.html: outdir
-	cp index.html out/
+processpool: \
+	outdir \
+	$(COMMONS) \
+	processpool_server.c
+	$(CC) $(CFLAGS) processpool_server.c $(COMMONS) -o $(LDIR)/processpool_server.o
+
+web: outdir
+	cp web/* out/
 
 all: \
 	client \
@@ -67,7 +73,8 @@ all: \
 	threadpool \
 	threadpoolmutex \
 	septhreadpool \
-	index.html
+	processpool \
+	web
 
 clean:
 	rm -rf $(LDIR)

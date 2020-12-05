@@ -10,10 +10,10 @@ void serve_static(int fd, char *filename, int filesize)
 
     get_filetype(filename,filetype);
     sprintf(buffer,"HTTP/1.0 200 OK\r\n");
-    sprintf(buffer,"%sServer:Tiny Web Server\r\n", buffer);
-    sprintf(buffer,"%sConnection:close\r\n", buffer);
-    sprintf(buffer,"%sContent-length:%d\r\n", buffer, filesize);
-    sprintf(buffer,"%sContent-type:%s\r\n\r\n", buffer, filetype);
+    sprintf(buffer,"%sServer: Web Server\r\n", buffer);
+    sprintf(buffer,"%sConnection: close\r\n", buffer);
+    sprintf(buffer,"%sContent-length: %d\r\n", buffer, filesize);
+    sprintf(buffer,"%sContent-type: %s\r\n\r\n", buffer, filetype);
     Rio_writen(fd, buffer, strlen(buffer));
     printf("Response headers:\n");
     printf("%s", buffer);
@@ -59,27 +59,27 @@ void handle(int fd)
     printf("%s", buffer);
     sscanf(buffer, "%s %s %s", method, uri, version);
     if(strcasecmp(method,"GET")) {
-        clienterror(fd, method, "501", "Not Implemented", "The WebServer does not implement this method");
+        clienterror(fd, method, "501", "Not Implemented", "The Web Server does not implement this method");
         return;
     }
     read_requesthdrs(&rio);
 
     is_static = parse_uri(uri, filename, cgiargs);
     if(stat(filename, &sbuffer) < 0) {
-        clienterror(fd, filename, "404", "Not found", "The WebServer coundn't find this file");
+        clienterror(fd, filename, "404", "Not found", "The Web Server coundn't find this file");
         return;
     }
 
     if(is_static) {
         if(!(S_ISREG(sbuffer.st_mode)) || !(S_IRUSR & sbuffer.st_mode)) {
-            clienterror(fd,filename, "403", "Forbidden","The WebServer coundn't read the file");
+            clienterror(fd,filename, "403", "Forbidden","The Web Server coundn't read the file");
             return;
         }
         serve_static(fd, filename, sbuffer.st_size);
     }
     else {
         if(!(S_ISREG(sbuffer.st_mode)) || !(S_IXUSR & sbuffer.st_mode)) {
-            clienterror(fd, filename, "403", "Forbidden","The WebServer coundn't run the CGI program");
+            clienterror(fd, filename, "403", "Forbidden","The Web Server coundn't run the CGI program");
             return;
         }
         serve_dynamic(fd, filename, cgiargs);
@@ -105,7 +105,7 @@ int main(int argc, char const *argv[])
         clientlen = sizeof(clientaddr);
         connfd = Accept(listenfd,(SA *)&clientaddr, &clientlen);
         getnameinfo((SA*)&clientaddr, clientlen, hostname, MAXLINE, port, MAXLINE, 0);
-        printf("Accept connection from (%s , %s)\n", hostname, port);
+        printf("Accept connection from [%s : %s]\n", hostname, port);
         handle(connfd);
         Close(connfd);
     }
